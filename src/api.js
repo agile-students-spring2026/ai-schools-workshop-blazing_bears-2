@@ -1,4 +1,4 @@
-const BASE_URL = 'https://api.schooldigger.com'
+const BASE_URL = '/api'
 const APP_ID = '32e0c2e9'
 const APP_KEY = 'fe67cad95da74a892758f35ecdaa46ae'
 
