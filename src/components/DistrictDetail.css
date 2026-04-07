@@ -1,0 +1,65 @@
+.district-detail {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #336;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+.district-detail h2 {
+  margin-bottom: 0.5rem;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.detail-meta .stars {
+  color: #f5a623;
+}
+
+.school-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.school-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.school-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.school-info span {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.school-rank {
+  color: #f5a623;
+  white-space: nowrap;
+}
