@@ -1,0 +1,68 @@
+.district-list {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.district-list h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.district-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.district-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  width: 100%;
+}
+
+.district-card:hover {
+  background: #f0f4ff;
+  border-color: #99b;
+}
+
+.rank {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #336;
+  min-width: 3rem;
+  text-align: center;
+}
+
+.district-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.district-info span {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.stars {
+  color: #f5a623;
+  font-size: 1.1rem;
+}
+
+.status-msg {
+  text-align: center;
+  padding: 2rem;
+  color: #555;
+}
+
+.status-msg.error {
+  color: #c00;
+}
