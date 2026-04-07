@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Schools</title>
+    <style>
+      :root {
+        --bg: #0b1220;
+        --card: #121a2b;
+        --text: #e7eefc;
+        --muted: #b9c6e4;
+        --border: rgba(255, 255, 255, 0.12);
+        --accent: #7aa2ff;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        background: radial-gradient(1200px 600px at 10% 10%, #13213f, var(--bg));
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 980px;
+        padding: 28px 18px 60px;
+        margin: 0 auto;
+      }
+      h1 {
+        margin: 0 0 8px;
+        letter-spacing: 0.2px;
+      }
+      p {
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      @media (min-width: 860px) {
+        .grid {
+          grid-template-columns: 360px 1fr;
+        }
+      }
+      .card {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        backdrop-filter: blur(10px);
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        margin: 12px 0 6px;
+      }
+      input,
+      select,
+      button {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.25);
+        color: var(--text);
+      }
+      button {
+        cursor: pointer;
+        background: rgba(122, 162, 255, 0.18);
+        border-color: rgba(122, 162, 255, 0.35);
+        font-weight: 600;
+      }
+      button:hover {
+        background: rgba(122, 162, 255, 0.26);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+        padding: 10px 8px;
+        vertical-align: top;
+      }
+      th {
+        text-align: left;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .pill {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .score {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .small {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .error {
+        color: #ffb4b4;
+        margin-top: 10px;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>AI Schools</h1>
+      <p>
+        Compare and score US school districts using public metrics. This demo ships with a small
+        sample dataset; swap in a richer public dataset later without changing the scoring logic.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="row">
+            <div>
+              <label for="q">Search</label>
+              <input id="q" placeholder="district name or county" />
+            </div>
+            <div>
+              <label for="state">State</label>
+              <input id="state" placeholder="e.g. CA" maxlength="2" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="minEnroll">Min enrollment</label>
+              <input id="minEnroll" type="number" min="0" placeholder="0" />
+            </div>
+            <div>
+              <label for="maxEnroll">Max enrollment</label>
+              <input id="maxEnroll" type="number" min="0" placeholder="50000" />
+            </div>
+          </div>
+
+          <label for="mode">Mode</label>
+          <select id="mode">
+            <option value="search">Search districts</option>
+            <option value="top">Top districts by score</option>
+          </select>
+
+          <label for="n">Top N (when in Top mode)</label>
+          <input id="n" type="number" min="1" max="50" value="10" />
+
+          <div style="margin-top: 12px">
+            <button id="run">Run</button>
+          </div>
+          <div class="small" style="margin-top: 10px">
+            Tip: scoring uses graduation + proficiency + smaller class sizes + spending.
+          </div>
+          <div id="err" class="error" style="display: none"></div>
+        </div>
+
+        <div class="card">
+          <table>
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>State</th>
+                <th>Enrollment</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr>
+                <td colspan="4" class="small">Run a search to see results.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const el = (id) => document.getElementById(id);
+      const fmtInt = (n) => new Intl.NumberFormat().format(n);
+
+      function setError(msg) {
+        const err = el("err");
+        if (!msg) {
+          err.style.display = "none";
+          err.textContent = "";
+          return;
+        }
+        err.style.display = "block";
+        err.textContent = msg;
+      }
+
+      function renderSearch(districts) {
+        const rows = el("rows");
+        rows.innerHTML = "";
+        if (!districts.length) {
+          rows.innerHTML = `<tr><td colspan="4" class="small">No matches.</td></tr>`;
+          return;
+        }
+        for (const d of districts) {
+          rows.innerHTML += `
+            <tr>
+              <td>
+                <div><strong>${d.name}</strong></div>
+                <div class="small">${d.county} County <span class="pill">${d.id}</span></div>
+              </td>
+              <td>${d.state}</td>
+              <td>${fmtInt(d.enrollment)}</td>
+              <td class="small">—</td>
+            </tr>
+          `;
+        }
+      }
+
+      function renderTop(scored) {
+        const rows = el("rows");
+        rows.innerHTML = "";
+        if (!scored.length) {
+          rows.innerHTML = `<tr><td colspan="4" class="small">No matches.</td></tr>`;
+          return;
+        }
+        for (const item of scored) {
+          const d = item.district;
+          rows.innerHTML += `
+            <tr>
+              <td>
+                <div><strong>${d.name}</strong></div>
+                <div class="small">${d.county} County <span class="pill">${d.id}</span></div>
+              </td>
+              <td>${d.state}</td>
+              <td>${fmtInt(d.enrollment)}</td>
+              <td class="score">${item.score.toFixed(2)}</td>
+            </tr>
+          `;
+        }
+      }
+
+      async function run() {
+        setError("");
+        const mode = el("mode").value;
+        const q = el("q").value.trim();
+        const state = el("state").value.trim();
+        const minEnroll = el("minEnroll").value;
+        const maxEnroll = el("maxEnroll").value;
+
+        try {
+          if (mode === "search") {
+            const params = new URLSearchParams();
+            if (q) params.set("q", q);
+            if (state) params.set("state", state);
+            if (minEnroll) params.set("min_enrollment", minEnroll);
+            if (maxEnroll) params.set("max_enrollment", maxEnroll);
+
+            const res = await fetch(`/api/districts?${params.toString()}`);
+            if (!res.ok) throw new Error((await res.json()).detail ?? "request failed");
+            renderSearch(await res.json());
+          } else {
+            const n = Number(el("n").value || "10");
+            const body = { n };
+            if (state) body.state = state;
+
+            const res = await fetch(`/api/top`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(body),
+            });
+            if (!res.ok) throw new Error((await res.json()).detail ?? "request failed");
+            renderTop(await res.json());
+          }
+        } catch (e) {
+          setError(e?.message ?? String(e));
+        }
+      }
+
+      el("run").addEventListener("click", run);
+    </script>
+  </body>
+</html>
+

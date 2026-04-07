@@ -1,0 +1,11 @@
+id,name,state,county,enrollment,student_teacher_ratio,graduation_rate,math_proficiency,reading_proficiency,per_pupil_spending
+0600001,Los Angeles Unified School District,CA,Los Angeles,429000,21.5,79.2,33.1,41.8,17500
+0600002,San Diego Unified School District,CA,San Diego,97500,19.2,86.0,42.7,50.9,16500
+3600001,New York City Geographic District #2,NY,New York,64000,16.4,88.1,52.3,54.9,28500
+1200001,Miami-Dade County Public Schools,FL,Miami-Dade,345000,20.3,83.6,40.2,47.1,11000
+1700001,Chicago Public Schools,IL,Cook,323000,19.8,82.5,31.9,38.4,17500
+4800001,Houston Independent School District,TX,Harris,190000,16.9,84.8,44.1,46.5,12000
+5300001,Seattle Public Schools,WA,King,52000,15.6,87.4,53.5,57.8,19500
+2500001,Boston Public Schools,MA,Suffolk,49000,13.7,79.9,38.2,41.2,28000
+0400001,Phoenix Union High School District,AZ,Maricopa,27000,18.4,77.5,34.8,39.5,9800
+0900001,Hartford Public Schools,CT,Hartford,19000,14.9,72.3,25.1,29.8,24000
